@@ -3,6 +3,81 @@ import numpy as np
 import sys
 
 
+def get_feature_matches(img1, img2):
+    sift = cv2.xfeatures2d.SIFT_create()
+    
+    # find the keypoints and descriptors with SIFT in current as well as next frame
+    kp1, des1 = sift.detectAndCompute(img1, None)
+    kp2, des2 = sift.detectAndCompute(img2, None)
+    
+    # FLANN parameters
+    FLANN_INDEX_KDTREE = 0
+    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+    search_params = dict(checks=50)
+    
+    flann = cv2.FlannBasedMatcher(index_params, search_params)
+    matches = flann.knnMatch(des1, des2, k=2)
+    
+    # Ratio test as per Lowe's paper
+    good = []
+    for i, (m, n) in enumerate(matches):
+        if m.distance < 0.5 * n.distance:
+            good.append(m)
+    
+    return kp1, kp2, good
+
+
+def get_point(kp1, kp2, match):
+    x1, y1 = kp1[match.queryIdx].pt
+    x2, y2 = kp2[match.trainIdx].pt
+    
+    return [x1, y1, x2, y2]
+
+
+def get_F_util(points):
+    A = []
+    for pt in points:
+        x1, y1, x2, y2 = pt
+        A.append([x1 * x2, x1 * y2, x1, y1 * x2, y1 * y2, y1, x2, y2, 1])
+    
+    A = np.asarray(A)
+    
+    U, S, Vh = np.linalg.svd(A, full_matrices=True)
+    
+    f = Vh[-1, :]
+    F = np.reshape(f, (3, 3)).transpose()
+    
+    # Correct rank of F
+    U, S, Vh = np.linalg.svd(F)
+    S_ = np.eye(3)
+    for i in range(3):
+        S_[i, i] = S[i]
+    S_[2, 2] = 0
+    
+    F = np.matmul(U, np.matmul(S_, Vh))
+    
+    return F
+
+
+def get_F(kp1, kp2, matches):
+    np.random.seed(30)
+    
+    for i in range(50):
+        idx = np.random.choice(len(matches), 8, replace=False)
+        points = []
+        for i in idx:
+            pt = get_point(kp1, kp2, matches[i])
+            points.append(pt)
+        
+        points = np.asarray(points)
+        
+        F = get_F_util(points)
+        
+    
+    return F, points
+
+
+"""
 def applyANMS(img1, nbest):
     coordinates = cv2.goodFeaturesToTrack(img1, 3 * nbest, 0.05, 20)
     Nstrong = len(coordinates)
@@ -87,3 +162,4 @@ def normalize_features(featureArr):
     sd = np.std(featureArr)
     featureArr = (featureArr - mean) / (sd + 10 ** -7)
     return featureArr
+"""

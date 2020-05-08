@@ -14,33 +14,34 @@ https://cmsc733.github.io/2019/proj/pfinal/
 
 '''
 
-def LinearTriangulation(p1,p2,K,R,C):
-	inCal = np.concatenate((R,C), axis=1)
 
-	print('intrinsic calibration')
-	print(inCal)
+def LinearTriangulation(pt1, pt2, K, R, C):
+    inCal = np.concatenate((R, C), axis=1)
 
-	p = np.matmul(K,inCal)
+    print('intrinsic calibration')
+    print(inCal)
 
-	p1 = p[0,:]
-	p2 = p[1,:]
-	p3 = p[2,:]
+    p = np.matmul(K, inCal)
 
-	x1 = p1[0]
-	y1 = p1[1]
+    p1 = p[0, :]
+    p2 = p[1, :]
+    p3 = p[2, :]
 
-	x2 = p2[0]
-	y2 = p2[1]
+    x1 = pt1[0]
+    y1 = pt1[1]
 
-	r1 = y1*p3-p2
-	r2 = p1-x1*p3
-	r3 = y2*p3-p2
-	r4 = p1-x2*p3
+    x2 = pt2[0]
+    y2 = pt2[1]
 
-	solMat = np.concatenate((r1,r2,r3,r4), axis=1)
+    r1 = y1 * p3 - p2
+    r2 = p1 - x1 * p3
+    r3 = y2 * p3 - p2
+    r4 = p1 - x2 * p3
 
-	U, _, Vt = numpy.linalg.svd(E)
+    solMat = np.concatenate((r1, r2, r3, r4), axis=1)
 
-	X = Vt[-1,:]
+    U, _, Vt = numpy.linalg.svd(E)
 
-	return(np.array([X[0]/X[3],X[1]/X[3],X[2]/X[3]]))
+    X = Vt[-1, :]
+
+    return (np.array([X[0] / X[3], X[1] / X[3], X[2] / X[3]]))

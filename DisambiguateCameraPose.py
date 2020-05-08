@@ -7,7 +7,8 @@ Ashwin Varghese Kuruttukulam(ashwinvk94@gmail.com)
 
 Description:
 Implements chirality check for the 4 estimated extrinsic
-calibration parameters
+calibration parameters. Returns true if the chirality
+check is passed.
 
 Section 1.3.5
 https://cmsc733.github.io/2019/proj/pfinal/

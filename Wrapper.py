@@ -14,6 +14,8 @@ https://cmsc733.github.io/2019/proj/pfinal/
 import sys
 import numpy as np
 import cv2
+from matplotlib import pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 from LoadData import *
 from EstimateFundamentalMatrix import EstimateFundamentalMatrix
@@ -21,6 +23,8 @@ from DrawCorrespondence import DrawCorrespondence
 from EssentialMatrixFromFundamentalMatrix import findEssentialMatrix
 from ExtractCameraPose import ExtractCameraPose
 from DisambiguateCameraPose import DisambiguateCameraPose
+from NonlinearTriangulation import NonlinearTriangulation
+
 
 # Camera Intrinsic Matrix
 K = np.array([[568.996140852, 0, 643.21055941],
@@ -97,6 +101,16 @@ def main():
 
     # chrality check and linear triangulation
     R, C, X = DisambiguateCameraPose(Rs, Cs, pts1, pts2, K)
+    fig1 = plt.figure()
+    ax = Axes3D(fig1)
+    ax.scatter(X[:, 0], X[:, 1], X[:, 2])
+
+    print('running non linear triangulation')
+    X = NonlinearTriangulation(K, pts1, pts2, X, R, C)
+    fig2 = plt.figure()
+    ax = Axes3D(fig2)
+    ax.scatter(X[:, 0], X[:, 1], X[:, 2])
+    plt.show()
 
 
 if __name__ == '__main__':

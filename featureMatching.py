@@ -85,6 +85,10 @@ def featureMatchingcv2(DataPath, visualize, imgn1, imgn2):
     # print(pts2.shape)
 
     F, inliers, foundFlag = get_F_with_ransac(points)
+    if not foundFlag:
+        print("ransac failed!!!")
+        quit()
+    pts1, pts2 = convertPts(inliers)
     inliers_matches = getMatches(points, inliers, good)
     if visualize:
         # Draw first 10 matches.
@@ -101,9 +105,10 @@ def featureMatchingcv2(DataPath, visualize, imgn1, imgn2):
         #     cv2.resizeWindow('image', 1000, 600)
         cv2.imshow("before ransac", img3)
         cv2.imshow("after ransac", img4)
+        # cv2.imwrite("before_ransac.jpg", img3)
+        # cv2.imwrite("after_ransac.jpg", img4)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
-
-    return None, None
-
-    # return pts1, pts2
+    print(pts1.shape)
+    print(pts2.shape)
+    return F, pts1, pts2

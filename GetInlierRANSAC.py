@@ -57,7 +57,7 @@ def get_inliers(points, F):
 
         e = np.matmul(x2, np.matmul(F, x1.T))
 
-        print(e)
+        # print(e)
         if abs(e) < err_thresh:
             inliers.append(p)
 
@@ -71,7 +71,7 @@ def get_F_with_ransac(points):
     nPoints = len(points)
     inlierThresh = 0.6
 
-    for k in range(100):
+    for k in range(200):
         randindx = random.sample(range(0, len(points)), 8)
         randpts = []
         for i in randindx:
@@ -86,7 +86,8 @@ def get_F_with_ransac(points):
             break
     if not foundFlag:
         print("not found")
-
+    # final estimation of F
+    F = get_F_util(inliers)
     return F, inliers, foundFlag
 
 
@@ -104,3 +105,12 @@ def getMatches(points, inliers, good):
         # print("found at ", str(ind))
         inlier_matches.append(good[ind])
     return inlier_matches
+
+
+def convertPts(points):
+    pts1 = []
+    pts2 = []
+    for pt in points:
+        pts1.append([pt[0], pt[1]])
+        pts2.append([pt[2], pt[3]])
+    return np.array(pts1), np.array(pts2)

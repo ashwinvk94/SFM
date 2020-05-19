@@ -1,49 +1,15 @@
 import numpy as np
 import scipy.optimize as opt
+"""
+Author:
+Ashwin Varghese Kuruttukulam(ashwinvk94@gmail.com)
 
-# def nonlinearerror(X, P, points):
-#     X = X.reshape((len(points), 4))
-#     X_homo = X.T
-#     # X = X[:, :3].T
-#     s = np.square(
-#         np.asarray(points[:, 0]) -
-#         (np.matmul(P[0, :], X_homo) / np.matmul(P[2, :], X_homo))) + np.square(
-#             np.asarray(points[:, 1]) -
-#             (np.matmul(P[1, :], X_homo) / np.matmul(P[2, :], X_homo)))
-#     s = s + np.square(
-#         np.asarray(points[:, 2]) -
-#         (np.matmul(P[0, :], X_homo) / np.matmul(P[2, :], X_homo))) + np.square(
-#             np.asarray(points[:, 3]) -
-#             (np.matmul(P[1, :], X_homo) / np.matmul(P[2, :], X_homo)))
-
-#     return np.asarray(s, dtype=np.float32)
-
-# def NonLinearTriangulation(K, x1, x2, X_init, R, C, R, C):
-#     optimized_params = opt.least_squares(fun=nonlinearerror,
-#                                          x0=init,
-#                                          method="dogbox",
-#                                          args=[K, x1, x2, R, C, R, C])
-
-#     X = np.reshape(optimized_params.x, (sz, 3))
+https://cmsc733.github.io/2019/proj/pfinal/
+"""
 
 
-#     return X
 def NonlinearTriangulation(K, x1, x2, X_init, R, C):
-    """Summary
 
-    Args:
-        K (TYPE): Description
-        x1 (TYPE): Description
-        x2 (TYPE): Description
-        X_init (TYPE): Description
-        R (TYPE): Description
-        C (TYPE): Description
-        R (TYPE): Description
-        C (TYPE): Description
-
-    Returns:
-        TYPE: Description
-    """
     sz = x1.shape[0]
     # print(R)
     # print(C)
@@ -64,21 +30,6 @@ def NonlinearTriangulation(K, x1, x2, X_init, R, C):
 
 
 def nonlinearerror(init, K, x1, x2, R, C):
-    """Summary
-
-    Args:
-        init (TYPE): Description
-        K (TYPE): Description
-        x1 (TYPE): Description
-        x2 (TYPE): Description
-        R (TYPE): Description
-        C (TYPE): Description
-        R (TYPE): Description
-        C (TYPE): Description
-
-    Returns:
-        TYPE: Description
-    """
     sz = x1.shape[0]
     X = np.reshape(init, (sz, 3))
 

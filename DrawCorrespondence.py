@@ -1,5 +1,3 @@
-""" File to implement function to draw correspondence
-"""
 import cv2
 import numpy as np
 import sys
@@ -9,20 +7,6 @@ sys.dont_write_bytecode = True
 
 def DrawCorrespondence(i, j, inliers_a, inliers_b, outlier1, outlier2,
                        DrawOutliers):
-    """Function to draw correspondences on input image
-
-    Args:
-        i (int): Input1 image number
-        j (int): Input2 image number
-        inliers_a (TYPE): list of inliers in image1
-        inliers_b (TYPE): list of inliers in image2
-        outlier1 (TYPE): list of outiers in image1
-        outlier2 (TYPE): list of outiers in image2
-        DrawOutliers (TYPE): Bool to draw outliers
-
-    Returns:
-        TYPE: image
-    """
     img1 = cv2.imread('Data/' + str(i) + '.jpg')
     img2 = cv2.imread('Data/' + str(j) + '.jpg')
 

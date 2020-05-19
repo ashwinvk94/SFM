@@ -1,23 +1,17 @@
-"""File to load data from the given files
-"""
 import numpy as np
 from GetInliersRANSAC import GetInliersRANSAC
 import sys
 
 sys.dont_write_bytecode = True
+"""
+Author:
+Ashwin Varghese Kuruttukulam(ashwinvk94@gmail.com)
+
+https://cmsc733.github.io/2019/proj/pfinal/
+"""
+
 
 def LoadData(path="Data/"):
-    """Main function to load data from files
-
-    Args:
-        path (str, optional): Path for input text files
-
-    Returns:
-        Mx: List of x coordinates of points
-        My: List of y coordinates of points
-        M: Binary List of features w.r.t. images
-        Color: List of RGB values of each feature
-    """
     n_images = 6
     Mx = []
     My = []
@@ -63,16 +57,6 @@ def LoadData(path="Data/"):
 
 
 def FindCorrespondence(a, b, database_path):
-    """To extract corrospondance between 2 images from given file
-
-    Args:
-        a (int): First Image Number
-        b (int): Second Image Number
-        database_path (str): path to read file
-
-    Returns:
-        list: List of matching points: x,y, binary, rgb
-    """
     matching_list = []
     if (1 <= a <= 6):
         with open(database_path + "matching" + str(a) + ".txt") as f:
@@ -141,17 +125,6 @@ def FindCorrespondence(a, b, database_path):
 
 
 def inlier_filter(Mx, My, M, n_images):
-    """To filter the binary list for inliers
-
-    Args:
-        Mx (array): x coordinates of points
-        My (array): y coordinates of points
-        M (array): Binary list of features
-        n_images (int): Number of images
-
-    Returns:
-        TYPE: Corrected List of inliers binary list, Outlier indices
-    """
     outlier_indices = np.zeros(M.shape)
     for i in range(1, n_images):
         for j in range(i + 1, n_images + 1):
@@ -164,10 +137,10 @@ def inlier_filter(Mx, My, M, n_images):
             if (len(indices) < 8):
                 continue
             # rgb_list = Color[indices]
-            pts1 = np.hstack((Mx[indices, img1 - 1].reshape((-1, 1)),
-                              My[indices, img1 - 1].reshape((-1, 1))))
-            pts2 = np.hstack((Mx[indices, img2 - 1].reshape((-1, 1)),
-                              My[indices, img2 - 1].reshape((-1, 1))))
+            pts1 = np.hstack((Mx[indices, img1 - 1].reshape(
+                (-1, 1)), My[indices, img1 - 1].reshape((-1, 1))))
+            pts2 = np.hstack((Mx[indices, img2 - 1].reshape(
+                (-1, 1)), My[indices, img2 - 1].reshape((-1, 1))))
 
             _, inliers_a, inliers_b, inlier_index = GetInliersRANSAC(
                 np.float32(pts1), np.float32(pts2), indices)

@@ -3,12 +3,7 @@ from LoadData import *
 from EstimateFundamentalMatrix import *
 from DrawCorrespondence import DrawCorrespondence
 import cv2
-from GetInlierRANSAC import *
-
-"""
-return 2  numpy array of size Nx2 each. Corresponding
-elements of each array are the matching pixel coordinates
-"""
+# from GetInlierRANSAC import *
 
 
 def featureMatching(DataPath, visualize, img1, img2):
@@ -36,41 +31,40 @@ def featureMatching(DataPath, visualize, img1, img2):
 
     #  We have all inliers at this point in M
     output = np.logical_and(M[:, img1 - 1], M[:, img2 - 1])
-    outlier = np.logical_and(outlier_indices[:, img1 - 1], outlier_indices[:, img2 - 1])
+    outlier = np.logical_and(outlier_indices[:, img1 - 1],
+                             outlier_indices[:, img2 - 1])
     outlier_idx = np.where(outlier == True)
-    (indices,) = np.where(output == True)
+    (indices, ) = np.where(output == True)
     rgb_list = Color[indices]
 
-    pts1 = np.hstack(
-        (Mx[indices, img1 - 1].reshape((-1, 1)), My[indices, img1 - 1].reshape((-1, 1)))
-    )
-    pts2 = np.hstack(
-        (Mx[indices, img2 - 1].reshape((-1, 1)), My[indices, img2 - 1].reshape((-1, 1)))
-    )
-    outlier1 = np.hstack(
-        (
-            Mx[outlier_idx, img1 - 1].reshape((-1, 1)),
-            My[outlier_idx, img1 - 1].reshape((-1, 1)),
-        )
-    )
-    outlier2 = np.hstack(
-        (
-            Mx[outlier_idx, img2 - 1].reshape((-1, 1)),
-            My[outlier_idx, img2 - 1].reshape((-1, 1)),
-        )
-    )
+    pts1 = np.hstack((Mx[indices, img1 - 1].reshape(
+        (-1, 1)), My[indices, img1 - 1].reshape((-1, 1))))
+    pts2 = np.hstack((Mx[indices, img2 - 1].reshape(
+        (-1, 1)), My[indices, img2 - 1].reshape((-1, 1))))
+    outlier1 = np.hstack((
+        Mx[outlier_idx, img1 - 1].reshape((-1, 1)),
+        My[outlier_idx, img1 - 1].reshape((-1, 1)),
+    ))
+    outlier2 = np.hstack((
+        Mx[outlier_idx, img2 - 1].reshape((-1, 1)),
+        My[outlier_idx, img2 - 1].reshape((-1, 1)),
+    ))
 
     if visualize:
-        out = DrawCorrespondence(
-            img1, img2, pts1, pts2, outlier1, outlier2, DrawOutliers=False
-        )
+        out = DrawCorrespondence(img1,
+                                 img2,
+                                 pts1,
+                                 pts2,
+                                 outlier1,
+                                 outlier2,
+                                 DrawOutliers=False)
         cv2.namedWindow("image", cv2.WINDOW_NORMAL)
         cv2.resizeWindow("image", 1000, 600)
         cv2.imshow("image", out)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-    return pts1, pts2
+    return pts1, pts2, M, Mx, My, Color, outlier_indices
 
 
 def featureMatchingcv2(DataPath, visualize, imgn1, imgn2):

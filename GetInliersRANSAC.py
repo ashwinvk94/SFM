@@ -1,5 +1,3 @@
-"""This file implements the RANSAC algorithm on given matches
-"""
 import numpy as np
 from EstimateFundamentalMatrix import EstimateFundamentalMatrix
 import sys
@@ -8,18 +6,6 @@ sys.dont_write_bytecode = True
 
 
 def GetInliersRANSAC(matches_a, matches_b, indices):
-    """Function to implement RANSAC
-
-    Args:
-        matches_a (np.array(int32)): Matches of image1
-        matches_b (np.array(int32)): Matches of image2
-        indices (array): indices of points to consider
-
-    Returns:
-        best_F: F matrix
-        inliers_a
-        inliers_b
-    """
     matches_num = matches_a.shape[0]
     Best_count = 0
 
